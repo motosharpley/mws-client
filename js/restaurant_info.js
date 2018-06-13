@@ -64,7 +64,7 @@ fetchRestaurantFromURL = (callback) => {
 fillRestaurantHTML = (restaurant = self.restaurant) => {
   const name = document.getElementById('restaurant-name');
   name.innerHTML = restaurant.name;
-  let imgUrl = restaurant.photograph;
+  let imgUrl = restaurant.photograph + '.jpg';
 
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;
