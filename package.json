@@ -17,6 +17,9 @@
   },
   "homepage": "https://github.com/motosharpley/stage-2-client#readme",
   "devDependencies": {
+    "css-loader": "^0.28.11",
+    "file-loader": "^1.1.11",
+    "style-loader": "^0.21.0",
     "webpack": "^4.12.0",
     "webpack-cli": "^3.0.8"
   },
