@@ -1,14 +1,5 @@
-import idb from 'idb';
+import './css/styles.css';
 
-let dbPromise = idb.open('restaurants', 1, function(upgradeDb) {
-  let keyValStore = upgradeDb.createObjectStore('keyval') ;
-  keyValStore.put('value', 'key');
-});
+import './js/indexdb';
+import './sw';
 
-dbPromise.then(function(db) {
-  var tx = db.transaction('keyval');
-  var keyValStore = tx.objectStore('keyval');
-  return keyValStore.get('key');
-}).then(function(val) {
-  console.log('The value of "value" is:', val);
-});
