@@ -10,5 +10,5 @@ dbPromise.then(function(db) {
   var keyValStore = tx.objectStore('keyval');
   return keyValStore.get('key');
 }).then(function(val) {
-  console.log('The value of "key" is:', val);
+  console.log('The value of "val" is:', val);
 });
