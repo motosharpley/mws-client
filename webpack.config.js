@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const webpack = require('webpack');
 
 module.exports = {
@@ -17,6 +18,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: 'Restaurant Reviews'
     }),
+    new CopyWebpackPlugin(['./src/sw.js']),
     new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin()
   ],
