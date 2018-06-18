@@ -1,21 +1,8 @@
-  // Register Service Worker
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-      navigator.serviceWorker.register('sw.js').then(function(registration) {
-        // Registration was successful
-        console.log('ServiceWorker registration successful with scope: ', registration.scope);
-      }, function(err) {
-        // registration failed :(
-        console.log('ServiceWorker registration failed: ', err);
-      });
-    });
-  }
-
-  let restaurants,
-    neighborhoods,
-    cuisines
-  let map
-  var markers = []
+let restaurants,
+neighborhoods,
+cuisines
+let map
+var markers = []
 
   /**
    * Fetch neighborhoods and cuisines as soon as the page is loaded.
@@ -24,6 +11,18 @@
     fetchNeighborhoods();
     fetchCuisines();
   });
+  
+  fetchRestaurants = () => {
+    DBHelper.fetchRestaurants((error, restaurants) => {
+      if (error) { // Got an error
+        console.error(error);
+      } else {
+        self.restaurants = restaurants;
+        fillRestaurantsHTML();
+      }
+    });
+  }
+
 
   /**
    * Fetch all neighborhoods and set their HTML.

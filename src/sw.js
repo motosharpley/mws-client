@@ -2,11 +2,9 @@
 let CACHE = 'mws-stage1-cache-v2';
 let urlsToCache = [
   '/',
-  '/restaurant.html',
-  'css/styles.css',
-  'js/restaurants.js',
-  'js/restaurant_info.js',
+  'js/app.bundle.js',
   'js/dbhelper.js',
+  'js/main.js',
   'img/1.jpg',
   'img/2.jpg',
   'img/3.jpg',

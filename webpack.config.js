@@ -20,6 +20,8 @@ module.exports = {
       template: 'src/index.html',
     }),
     new CopyWebpackPlugin([
+      {from: './src/js/dbhelper.js', to: './js'},
+      {from: './src/js/main.js', to: './js'},
       {from: './src/sw.js'},
       {from: 'src/img', to: './img'},
       {from: './src/manifest.json'}
