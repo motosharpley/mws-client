@@ -16,14 +16,19 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(['dist']),
     new HtmlWebpackPlugin({
-      title: 'Restaurant Reviews'
+      title: 'Restaurant Reviews',
+      template: 'src/index.html',
     }),
-    new CopyWebpackPlugin(['./src/sw.js']),
+    new CopyWebpackPlugin([
+      {from: './src/sw.js'},
+      {from: 'src/img', to: './img'},
+      {from: './src/manifest.json'}
+    ]),
     new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin()
   ],
   output: {
-    filename: '[name].bundle.js',
+    filename: './js/[name].bundle.js',
     path: path.resolve(__dirname, 'dist')
   },
   module: {
