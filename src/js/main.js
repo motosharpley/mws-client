@@ -11,17 +11,6 @@ var markers = []
     fetchNeighborhoods();
     fetchCuisines();
   });
-  
-  fetchRestaurants = () => {
-    DBHelper.fetchRestaurants((error, restaurants) => {
-      if (error) { // Got an error
-        console.error(error);
-      } else {
-        self.restaurants = restaurants;
-        fillRestaurantsHTML();
-      }
-    });
-  }
 
 
   /**
