@@ -1,8 +1,8 @@
-// set up the cache
-let CACHE = 'mws-stage1-cache-v2';
+
+let CACHE = 'mws-cache-v3';
 let urlsToCache = [
   '/',
-  'js/app.bundle.js',
+  'app.bundle.js',
   'js/dbhelper.js',
   'js/main.js',
   'img/1.jpg',
