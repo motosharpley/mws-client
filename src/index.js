@@ -1,7 +1,3 @@
-import './css/styles.css';
-
-import './js/indexdb';
-
   // Register Service Worker
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
