@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "description": "Udacity Mobile Web Specialist stage 2 project",
   "private": true,
-  "scripts": {
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/motosharpley/stage-2-client.git"
@@ -14,5 +13,11 @@
   "bugs": {
     "url": "https://github.com/motosharpley/stage-2-client/issues"
   },
-  "homepage": "https://github.com/motosharpley/stage-2-client#readme"
+  "homepage": "https://github.com/motosharpley/stage-2-client#readme",
+  "dependencies": {
+    "idb": "^2.1.2"
+  },
+  "devDependencies": {
+    "gulp": "^4.0.0"
+  }
 }
