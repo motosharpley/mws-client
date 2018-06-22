@@ -19,8 +19,8 @@
     "idb": "^2.1.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.0.0-beta.51",
     "gulp": "^3.9.1",
-    "gulp-babel": "^8.0.0-beta.2"
+    "gulp-clean-css": "^3.9.4",
+    "gulp-htmlmin": "^4.0.0"
   }
 }
