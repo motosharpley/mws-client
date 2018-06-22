@@ -1,4 +1,4 @@
-import idb from 'idb';
+const idb = require('idb');
 
 let dbPromise = idb.open('rr-db', 1, function(upgradeDb) {
   switch(upgradeDb.oldVersion) {
