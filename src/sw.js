@@ -1,5 +1,5 @@
 
-let CACHE = 'mws-cache-v3';
+let staticCache = 'mws-cache-v3';
 let urlsToCache = [
   '/',
   'img/1.jpg',
@@ -36,7 +36,7 @@ let urlsToCache = [
 
 self.addEventListener('install', function(event) {
   event.waitUntil(
-    caches.open(CACHE).then(function(cache) {
+    caches.open(staticCache).then(function(cache) {
       return cache.addAll(urlsToCache);
     })
   );
@@ -48,7 +48,7 @@ self.addEventListener('activate', function(event) {
       return Promise.all(
         cacheNames.filter(function(cacheName) {
           return cacheName.startsWith('mws-') &&
-                 cacheName != CACHE;
+                 cacheName != staticCache;
         }).map(function(cacheName) {
           return caches.delete(cacheName);
         })
@@ -61,7 +61,7 @@ self.addEventListener('fetch', function(event) {
   event.respondWith(
     caches.match(event.request).then(function(resp) {
       return resp || fetch(event.request).then(function(response) {
-        return caches.open(CACHE).then(function(cache) {
+        return caches.open(staticCache).then(function(cache) {
           cache.put(event.request, response.clone());
           return response;
         });  
