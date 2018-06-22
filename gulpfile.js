@@ -1,6 +1,8 @@
 const gulp = require('gulp');
 const htmlmin = require('gulp-htmlmin');
 const cleanCSS = require('gulp-clean-css');
+const uglify = require('gulp-uglify');
+const pump = require('pump');
 
 //  --- Static Assets ---
 gulp.task('html', function() {
@@ -26,15 +28,25 @@ gulp.task('manifest', function() {
 })
 
 // --- JS Assets ---
-gulp.task('sw', function() {
-  return gulp.src('src/sw.js')
-    .pipe(gulp.dest('dist'))
-})
+gulp.task('sw', function(cb) {
+  pump([
+      gulp.src('src/sw.js'),
+      uglify(),
+      gulp.dest('dist')
+    ],
+    cb
+  );  
+});
 
-gulp.task('js', function() {
-  return gulp.src('src/js/*.js')
-    .pipe(gulp.dest('dist/js'))
-})
+gulp.task('js', function(cb) {
+  pump([
+      gulp.src('src/js/*.js'),
+      uglify(),
+      gulp.dest('dist/js')
+    ],
+    cb
+  );  
+});
 
 
 
