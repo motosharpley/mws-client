@@ -15,26 +15,39 @@ class DBHelper {
     // return 'https://motosharpley.github.io/mws-stage-1/data/restaurants.json';
   }
   
+  static fetchRestaurants(callback) {
+    fetch(DBHelper.DATABASE_URL)
+      .then(function (res) {
+        if(res.ok) {
+          return res.json();
+        }        
+      })
+      .then(function (restaurants) {
+        callback(null, restaurants);
+      })
+      .catch(function (error) {
+      callback(null, error);
+    })
+  }
   
- 
   /**
    * Fetch all restaurants.
    */
-  static fetchRestaurants(callback) {
-    let xhr = new XMLHttpRequest();
+  // static fetchRestaurants(callback) {
+  //   let xhr = new XMLHttpRequest();
     
-    xhr.open('GET', DBHelper.DATABASE_URL);
-    xhr.onload = () => {
-      if (xhr.status === 200) { // Got a success response from server!
-        const restaurants = JSON.parse(xhr.responseText);
-        callback(null, restaurants);
-      } else { // Oops!. Got an error from server.
-        const error = (`Request failed. Returned status of ${xhr.status}`);
-        callback(error, null);
-      }
-    };
-    xhr.send();
-  }
+  //   xhr.open('GET', DBHelper.DATABASE_URL);
+  //   xhr.onload = () => {
+  //     if (xhr.status === 200) { // Got a success response from server!
+  //       const restaurants = JSON.parse(xhr.responseText);
+  //       callback(null, restaurants);
+  //     } else { // Oops!. Got an error from server.
+  //       const error = (`Request failed. Returned status of ${xhr.status}`);
+  //       callback(error, null);
+  //     }
+  //   };
+  //   xhr.send();
+  // }
 
   /**
    * Fetch a restaurant by its ID.
