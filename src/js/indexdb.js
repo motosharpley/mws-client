@@ -330,21 +330,11 @@ let dbPromise = idb.open('rr-db', 1, function(upgradeDb) {
 });
 
 dbPromise.then(function(db) {
-  let tx = db.transaction('keyval');
-  let keyValStore = tx.objectStore('keyval');
-  return keyValStore.get('key');
-}).then(function(val) {
-  console.log('The value of "key" is:', val);
-});
-
-dbPromise.then(function(db) {
   let tx = db.transaction('keyval', 'readwrite');
   let keyValStore = tx.objectStore('keyval');
   keyValStore.put('myval', 'mykey');
   return tx.complete;
-}).then(function() {
-  console.log('successfully added your key and value to keyval');
-});
+})
 
 dbPromise.then(function(db) {
   let tx = db.transaction('restaurantInfo', 'readwrite');
@@ -360,9 +350,7 @@ dbPromise.then(function(db) {
     reviews: 'hmmm this place'
   });
   return tx.complete;
-}).then(function() {
-  console.log('rest info added');
-});
+})
 
 dbPromise.then(function(db){
   let tx = db.transaction('restaurantInfo');
