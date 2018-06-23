@@ -1,6 +1,6 @@
 
-let staticCache = 'mws-cache-v3';
-let urlsToCache = [
+var staticCache = 'mws-cache-v3';
+var urlsToCache = [
   '/',
   'img/1.jpg',
   'img/2.jpg',
