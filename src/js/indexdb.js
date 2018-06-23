@@ -316,47 +316,41 @@
 }());
 
 
+// const idb = require('idb'); **************************
 
-// const idb = require('idb'); -------------------------------
+function getRestaurants() {
+  fetch('http://localhost:1337/restaurants')
+  .then(function(res) {
+    return res.json();
+  }).then(function(data) {
+    restaurants = data;
+  })
+}
+
+document.addEventListener('DOMContentLoaded', (event) => {
+  getRestaurants();
+})
+
 
 let dbPromise = idb.open('rr-db', 1, function(upgradeDb) {
-  switch(upgradeDb.oldVersion) {
-    case 0:
-      let keyValStore = upgradeDb.createObjectStore('keyval') ;
-      keyValStore.put('value', 'key');
-    case 1:
-      upgradeDb.createObjectStore('restaurantInfo', {keyPath: 'name'});
-  }  
-});
-
-dbPromise.then(function(db) {
-  let tx = db.transaction('keyval', 'readwrite');
-  let keyValStore = tx.objectStore('keyval');
-  keyValStore.put('myval', 'mykey');
-  return tx.complete;
+  upgradeDb.createObjectStore('restaurantInfo', {keyPath: 'id'});
 })
+
 
 dbPromise.then(function(db) {
   let tx = db.transaction('restaurantInfo', 'readwrite');
   let restaurantStore = tx.objectStore('restaurantInfo');
+  restaurants.forEach(function(restaurant) {
+    restaurantStore.put(restaurant);
+  })
+// TODO CLEAN DB -- LIMIT NUMBER OF ENTRIES
 
-  restaurantStore.put({
-    name: 'Rest Name',
-    neighborhood: 'Neighborhood',
-    photograph: '1',
-    address: 'address string',
-    cuisine_type: "Cuisine",
-    operating_hours: 'some time',
-    reviews: 'hmmm this place'
-  });
-  return tx.complete;
 })
 
 dbPromise.then(function(db){
   let tx = db.transaction('restaurantInfo');
   let restaurantStore = tx.objectStore('restaurantInfo');
-
   return restaurantStore.getAll();
 }).then(function(restaurant) {
   console.log('Restaurant-info:', restaurant );
-});
+})
