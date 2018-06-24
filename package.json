@@ -16,7 +16,8 @@
   "homepage": "https://github.com/motosharpley/stage-2-client#readme",
   "dependencies": {
     "express": "^4.16.3",
-    "idb": "^2.1.2"
+    "idb": "^2.1.2",
+    "serve-static": "^1.13.2"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
