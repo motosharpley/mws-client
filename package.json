@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "Udacity Mobile Web Specialist stage 2 project",
   "private": true,
-  "scripts": {},
+  "scripts": {
+    "server": "node server",
+    "start": "nodemon server"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/motosharpley/stage-2-client.git"
@@ -25,6 +28,7 @@
     "gulp-concat": "^2.6.1",
     "gulp-htmlmin": "^4.0.0",
     "gulp-uglify-es": "^1.0.4",
+    "nodemon": "^1.17.5",
     "pump": "^3.0.0"
   }
 }
