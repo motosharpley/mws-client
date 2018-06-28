@@ -327,13 +327,20 @@ function getRestaurants() {
   })
 }
 
-document.addEventListener('DOMContentLoaded', (event) => {
-  getRestaurants();
-})
+getRestaurants();
+
+// document.addEventListener('DOMContentLoaded', (event) => {
+//   getRestaurants();
+// })
 
 // @@ TODO HANDLE DB VERSIONS
 let dbPromise = idb.open('rr-db', 1, function(upgradeDb) {
-  upgradeDb.createObjectStore('restInfo', {keyPath: 'id'});
+  switch (upgradeDb.oldVersion) {
+    case 0:
+    // placeholder so that switchblock will execute when db is first created
+    case 1:
+    upgradeDb.createObjectStore('restInfo', {keyPath: 'id'});
+  }
 })
 
 
@@ -347,13 +354,13 @@ dbPromise.then(function(db) {
 
 })
 
-dbPromise.then(function(db){
-  let tx = db.transaction('restInfo');
-  let restaurantStore = tx.objectStore('restInfo');
-  return restaurantStore.getAll();
-}).then(function(restaurant) {
-  console.log('Restaurant-info:', restaurant );
-})
+// dbPromise.then(function(db){
+//   let tx = db.transaction('restInfo');
+//   let restaurantStore = tx.objectStore('restInfo');
+//   return restaurantStore.getAll();
+// }).then(function(restaurant) {
+//   console.log('Restaurant-info:', restaurant );
+// })
 
 
 //  @@ TODO CREATE NEGHBORHOODS INDEX
