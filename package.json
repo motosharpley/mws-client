@@ -4,6 +4,8 @@
   "description": "Udacity Mobile Web Specialist stage 2 project",
   "private": true,
   "scripts": {
+    "server": "node server",
+    "start": "nodemon server"
   },
   "repository": {
     "type": "git",
@@ -14,5 +16,19 @@
   "bugs": {
     "url": "https://github.com/motosharpley/stage-2-client/issues"
   },
-  "homepage": "https://github.com/motosharpley/stage-2-client#readme"
+  "homepage": "https://github.com/motosharpley/stage-2-client#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "idb": "^2.1.2",
+    "serve-static": "^1.13.2"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-clean-css": "^3.9.4",
+    "gulp-concat": "^2.6.1",
+    "gulp-htmlmin": "^4.0.0",
+    "gulp-uglify-es": "^1.0.4",
+    "nodemon": "^1.17.5",
+    "pump": "^3.0.0"
+  }
 }

@@ -14,27 +14,25 @@ class DBHelper {
     // return '/data/restaurants.json';
     // return 'https://motosharpley.github.io/mws-stage-1/data/restaurants.json';
   }
-  
-  
  
-  /**
+    /**
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    let xhr = new XMLHttpRequest();
-    
-    xhr.open('GET', DBHelper.DATABASE_URL);
-    xhr.onload = () => {
-      if (xhr.status === 200) { // Got a success response from server!
-        const restaurants = JSON.parse(xhr.responseText);
+    fetch(DBHelper.DATABASE_URL)
+      .then(function (res) {
+        if(res.ok) {
+          return res.json();
+        }        
+      })
+      .then(function (restaurants) {
         callback(null, restaurants);
-      } else { // Oops!. Got an error from server.
-        const error = (`Request failed. Returned status of ${xhr.status}`);
-        callback(error, null);
-      }
-    };
-    xhr.send();
+      })
+      .catch(function (error) {
+      callback(null, error);
+    })
   }
+
 
   /**
    * Fetch a restaurant by its ID.
@@ -108,6 +106,7 @@ class DBHelper {
     });
   }
 
+  // @@ TODO REFACTOR TO USE IDB INDEX && REFACTOR IN MAIN.JS ****
   /**
    * Fetch all neighborhoods with proper error handling.
    */
@@ -126,6 +125,7 @@ class DBHelper {
     });
   }
 
+  // @@ TODO REFACTOR TO USE IDB INDEX && REFACTOR IN MAIN.JS ****
   /**
    * Fetch all cuisines with proper error handling.
    */
@@ -151,6 +151,7 @@ class DBHelper {
     return (`./restaurant.html?id=${restaurant.id}`);
   }
 
+  // @@ TODO REFACTOR OR ELIMINATE ??? ******
   /**
    * Restaurant image URL.
    */
@@ -163,14 +164,13 @@ class DBHelper {
    * Map marker for a restaurant.
    */
   static mapMarkerForRestaurant(restaurant, map) {
-    const marker = new google.maps.Marker({
-      position: restaurant.latlng,
-      title: restaurant.name,
-      url: DBHelper.urlForRestaurant(restaurant),
-      map: map,
-      animation: google.maps.Animation.DROP}
-    );
+    // https://leafletjs.com/reference-1.3.0.html#marker  
+    const marker = new L.marker([restaurant.latlng.lat, restaurant.latlng.lng],
+      {title: restaurant.name,
+      alt: restaurant.name,
+      url: DBHelper.urlForRestaurant(restaurant)
+      })
+      marker.addTo(newMap);
     return marker;
-  }
-  
+  }  
 }
