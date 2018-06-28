@@ -331,15 +331,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
   getRestaurants();
 })
 
-
+// @@ TODO HANDLE DB VERSIONS
 let dbPromise = idb.open('rr-db', 1, function(upgradeDb) {
-  upgradeDb.createObjectStore('restaurantInfo', {keyPath: 'id'});
+  upgradeDb.createObjectStore('restInfo', {keyPath: 'id'});
 })
 
 
 dbPromise.then(function(db) {
-  let tx = db.transaction('restaurantInfo', 'readwrite');
-  let restaurantStore = tx.objectStore('restaurantInfo');
+  let tx = db.transaction('restInfo', 'readwrite');
+  let restaurantStore = tx.objectStore('restInfo');
   restaurants.forEach(function(restaurant) {
     restaurantStore.put(restaurant);
   })
@@ -348,9 +348,13 @@ dbPromise.then(function(db) {
 })
 
 dbPromise.then(function(db){
-  let tx = db.transaction('restaurantInfo');
-  let restaurantStore = tx.objectStore('restaurantInfo');
+  let tx = db.transaction('restInfo');
+  let restaurantStore = tx.objectStore('restInfo');
   return restaurantStore.getAll();
 }).then(function(restaurant) {
   console.log('Restaurant-info:', restaurant );
 })
+
+
+//  @@ TODO CREATE NEGHBORHOODS INDEX
+//  @@ TODO CREATE CUISINES INDEX
