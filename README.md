@@ -2,27 +2,23 @@
 ---
 #### _Three Stage Course Material Project - Restaurant Reviews_
 
-## Project Overview: Stage 1
+## Project Overview: Stage 2
 
-For the **Restaurant Reviews** projects, you will incrementally convert a static webpage to a mobile-ready web application. In **Stage One**, you will take a static design that lacks accessibility and convert the design to be responsive on different sized displays and accessible for screen reader use. You will also add a service worker to begin the process of creating a seamless offline experience for your users.
+This is the client side application for the stage 2 MWS Nano Degree. The static assests are served via a simple express static server via port 3000. If you need to adjust the port settings they can be found in the server.js file at the root directory.
 
-### Specification
+The project is configured to build static assests using gulp tasks and all production files will be placed in the 'dist' directory when you run the `gulp` command from the root directory.
 
-You have been provided the code for a restaurant reviews website. The code has a lot of issues. It’s barely usable on a desktop browser, much less a mobile device. It also doesn’t include any standard accessibility features, and it doesn’t work offline at all. Your job is to update the code to resolve these issues while still maintaining the included functionality. 
+The data set relies on the mock API which can be found in the following repository [Api Repo here!](https://github.com/motosharpley/mws-stage-2) there are installation and start-up instructions accordingly in the readme.md file 
 
-### What do I do from here?
+### Installation and start up 
 
-1. In this folder, start up a simple HTTP server to serve up the site files on your local computer. Python has some simple tools to do this, and you don't even need to know Python. For most people, it's already installed on your computer. 
+> After cloning the repository to your local machine and assuming you already have Nodejs installed start by running `npm install` in the root directory
 
-In a terminal, check the version of Python you have: `python -V`. If you have Python 2.x, spin up the server with `python -m SimpleHTTPServer 8000` (or some other port, if port 8000 is already in use.) For Python 3.x, you can use `python3 -m http.server 8000`. If you don't have Python installed, navigate to Python's [website](https://www.python.org/) to download and install the software.
+> Next you will need to build the dist files by running `gulp` in the root directory
 
-2. With your server running, visit the site: `http://localhost:8000`, and look around for a bit to see what the current experience looks like.
-3. Explore the provided code, and make start making a plan to implement the required features in three areas: responsive design, accessibility and offline use.
-4. Write code to implement the updates to get this site on its way to being a mobile-ready website.
+> now just run `node server` and the client will be running on localhost:3000
 
-### Note about ES6
-
-Most of the code in this project has been written to the ES6 JavaScript specification for compatibility with modern web browsers and future proofing JavaScript code. As much as possible, try to maintain use of ES6 in any additional JavaScript you write. 
+> remember to also start the api server which will be running on port 1337
 
 
 
