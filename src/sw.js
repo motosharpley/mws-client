@@ -1,4 +1,4 @@
-
+// set up the cahche
 var staticCache = 'mws-cache-v3';
 var urlsToCache = [
   '/',
@@ -34,6 +34,7 @@ var urlsToCache = [
   'img/med-10.jpg'
 ];
 
+// install service worker
 self.addEventListener('install', function(event) {
   event.waitUntil(
     caches.open(staticCache).then(function(cache) {
@@ -42,6 +43,7 @@ self.addEventListener('install', function(event) {
   );
 });
 
+// activate service worker fill and clean/delete old caches
 self.addEventListener('activate', function(event) {
   event.waitUntil(
     caches.keys().then(function(cacheNames) {
@@ -57,6 +59,7 @@ self.addEventListener('activate', function(event) {
   );
 });
 
+// intercept requests and serve from cache 
 self.addEventListener('fetch', function(event) {
   event.respondWith(
     caches.match(event.request).then(function(resp) {
