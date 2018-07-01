@@ -4,8 +4,8 @@
   "description": "Udacity Mobile Web Specialist stage 2 project",
   "private": true,
   "scripts": {
-    "server": "node server",
-    "start": "nodemon server"
+    "start": "gulp && concurrently --kill-others \"node server\"",
+    "dev": "gulp && concurrently --kill-others \"gulp watch\" \"nodemon server.js\""
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,7 @@
     "serve-static": "^1.13.2"
   },
   "devDependencies": {
+    "concurrently": "^3.6.0",
     "gulp": "^3.9.1",
     "gulp-clean-css": "^3.9.4",
     "gulp-concat": "^2.6.1",
