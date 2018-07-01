@@ -14,11 +14,11 @@ The data set relies on the mock API which can be found in the following reposito
 
 > After cloning the repository to your local machine and assuming you already have Nodejs installed start by running `npm install` in the root directory
 
-> Next you will need to build the dist files by running `gulp` in the root directory
-
-> Now just run `node server` and the client will be running on localhost:3000
+> Now just run `npm start` and the client will be running on localhost:3000
 
 > Remember to also start the api server which will be running on port 1337
+
+> To start the development environment run `npm run dev` this will run gulp to build dist files, nodemon to hot reload the server, and gulp watch to trigger rebuild dist files upon changes to files in the src directory
 
 
 
