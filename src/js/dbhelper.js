@@ -9,15 +9,13 @@ class DBHelper {
    */
   static get DATABASE_URL() {
     const port = 1337; // Change this to your server port
-    // return `http://localhost:${port}/data/restaurants.json`;
     return `http://localhost:${port}/restaurants`;
-    // return '/data/restaurants.json';
-    // return 'https://motosharpley.github.io/mws-stage-1/data/restaurants.json';
   }
  
     /**
    * Fetch all restaurants.
    */
+  // @@ TODO fetch data from indexedDB in catch
   static fetchRestaurants(callback) {
     fetch(DBHelper.DATABASE_URL)
       .then(function (res) {
@@ -72,6 +70,7 @@ class DBHelper {
   /**
    * Fetch restaurants by a neighborhood with proper error handling.
    */
+  // @@ TODO change to pull neighborhoods from idb index
   static fetchRestaurantByNeighborhood(neighborhood, callback) {
     // Fetch all restaurants
     DBHelper.fetchRestaurants((error, restaurants) => {
