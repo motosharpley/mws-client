@@ -48,7 +48,10 @@ gulp.task('js', function(cb) {
   );  
 });
 
-
+// this task watches our "app" files & rebuilds whenever they change
+gulp.task('watch', function() {
+  gulp.watch('src/**/*', ['default']);
+});
 
 
 gulp.task('default', ['html', 'css', 'img', 'manifest', 'sw', 'js'])
