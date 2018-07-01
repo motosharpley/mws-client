@@ -18,7 +18,4 @@ The data set relies on the mock API which can be found in the following reposito
 
 > Remember to also start the api server which will be running on port 1337
 
-> To start the development environment run `npm run dev` this will run gulp to build dist files, nodemon to hot reload the server, and gulp watch to trigger rebuild dist files upon changes to files in the src directory
-
-
-
+> To start the development environment run `npm run dev` this will run gulp to build dist files, nodemon to hot reload the server, and gulp watch to rebuild dist files upon changes to files in the src directory
