@@ -30,6 +30,7 @@
     "gulp-htmlmin": "^4.0.0",
     "gulp-uglify-es": "^1.0.4",
     "nodemon": "^1.17.5",
-    "pump": "^3.0.0"
+    "pump": "^3.0.0",
+    "workbox-build": "^3.3.1"
   }
 }
