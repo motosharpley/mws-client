@@ -74,7 +74,9 @@ nav h1 a {
 #map {
   height: 30vh;
   width: 100%;
-  background-color: #ccc;
+}
+#map a {
+  color: crimson;
 }
 /* ====================== Restaurant Filtering ====================== */
 /* trbl */
