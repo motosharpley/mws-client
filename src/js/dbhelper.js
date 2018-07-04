@@ -33,11 +33,11 @@ dbPromise.then(function(db) {
 
 })
 
-dbPromise.then(function(db){
-  let tx = db.transaction('restInfo');
-  let restaurantStore = tx.objectStore('restInfo');
-  return restaurantStore.getAll();
-})
+// dbPromise.then(function(db){
+//   let tx = db.transaction('restInfo');
+//   let restaurantStore = tx.objectStore('restInfo');
+//   return restaurantStore.getAll();
+// })
 // .then(function(restaurant) {
 //   console.log('Restaurant-info:', restaurant );
 // })
@@ -78,7 +78,7 @@ class DBHelper {
       let restaurantStore = tx.objectStore('restInfo');
       return restaurantStore.getAll();
     }).then(function(restaurants) {
-      // console.log('Restaurant-info:', restaurants );
+      // console.log(restaurants);
       callback(null, restaurants)
     })
   }
