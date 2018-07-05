@@ -63,6 +63,7 @@ fetchRestaurantFromURL = (callback) => {
     error = 'No restaurant id in URL'
     callback(error, null);
   } else {
+    // @@ TODO refactor to fetch from idb index
     DBHelper.fetchRestaurantById(id, (error, restaurant) => {
       self.restaurant = restaurant;
       if (!restaurant) {
@@ -122,6 +123,14 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
     hours.appendChild(row);
   }
 }
+
+/**
+ * @@ TODO Add a new Review
+ */
+
+ /**
+  *  @@ add / remove from favorites
+  */
 
 /**
  * Create all reviews HTML and add them to the webpage.
