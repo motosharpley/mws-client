@@ -1,10 +1,12 @@
 const gulp = require('gulp');
 const del = require('del');
+const workboxBuild = require('workbox-build');
 const runSequence = require('run-sequence');
 const htmlmin = require('gulp-htmlmin');
 const cleanCSS = require('gulp-clean-css');
 const uglify = require('gulp-uglify-es').default;
 const pump = require('pump');
+
 
 // this task removes old files
 gulp.task('clean', () => del('dist', {dot: true}));
@@ -33,16 +35,7 @@ gulp.task('manifest', function() {
 })
 
 // --- JS Assets ---
-gulp.task('sw', function(cb) {
-  pump([
-      gulp.src('src/sw.js'),
-      uglify(),
-      gulp.dest('dist')
-    ],
-    cb
-  );  
-});
-
+// This task copies and uglifies our js files
 gulp.task('js', function(cb) {
   pump([
       gulp.src('src/js/*.js'),
@@ -52,6 +45,38 @@ gulp.task('js', function(cb) {
     cb
   );  
 });
+
+
+// generate the service worker
+gulp.task('sw', () => {
+  return workboxBuild.injectManifest({
+    swSrc: 'src/sw.js',
+    swDest: 'dist/sw.js',
+    globDirectory: 'dist',
+    globPatterns: [
+      'css/*.css',
+      '*.html',
+      'js/*.js',
+      'img/*.*',
+      'manifest.json'
+    ]
+  }).catch(err => {
+    console.log('[ERROR]: ' + err);
+  });
+});
+
+/*
+gulp.task('sw', function(cb) {
+  pump([
+      gulp.src('src/sw.js'),
+      uglify(),
+      gulp.dest('dist')
+    ],
+    cb
+  ); 
+*/
+
+
 
 // this task watches our "app" files & rebuilds whenever they change
 gulp.task('watch', function() {
@@ -65,8 +90,8 @@ gulp.task('default', ['clean'], cb => {
     'css',
     'img',
     'manifest',
-    'sw',
     'js',
+    'sw',
     cb
   );
 });
