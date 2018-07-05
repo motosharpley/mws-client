@@ -1,5 +1,5 @@
 /**
- * Common database helper functions.
+ * set up indexedDB
  */
 function getRestaurants() {
   fetch('http://localhost:1337/restaurants')
@@ -12,7 +12,6 @@ function getRestaurants() {
 
 getRestaurants();
 
-// @@ TODO HANDLE DB VERSIONS
 let dbPromise = idb.open('rr-db', 1, function(upgradeDb) {
   switch (upgradeDb.oldVersion) {
     case 0:
@@ -33,16 +32,9 @@ dbPromise.then(function(db) {
 
 })
 
-// dbPromise.then(function(db){
-//   let tx = db.transaction('restInfo');
-//   let restaurantStore = tx.objectStore('restInfo');
-//   return restaurantStore.getAll();
-// })
-// .then(function(restaurant) {
-//   console.log('Restaurant-info:', restaurant );
-// })
-
-
+/**
+ * Common database helper functions.
+ */
 class DBHelper {
 
   /**
@@ -200,15 +192,6 @@ class DBHelper {
    */
   static urlForRestaurant(restaurant) {
     return (`./restaurant.html?id=${restaurant.id}`);
-  }
-
-  // @@ TODO REFACTOR OR ELIMINATE ??? ******
-  /**
-   * Restaurant image URL.
-   */
-  static imageUrlForRestaurant(restaurant) {
-    return (`/img/${restaurant.photograph}`);
-    // return (`https://motosharpley.github.io/mws-stage-1/img/${restaurant.photograph}`);
   }
 
   /**
