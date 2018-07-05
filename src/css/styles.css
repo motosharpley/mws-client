@@ -41,35 +41,6 @@ nav h1 a {
   font-weight: 200;
   letter-spacing: 10px;
 }
-#breadcrumb {
-    padding: 5px;
-    list-style: none;
-    background-color: #ffffff;
-}
-
-/* Display list items side by side */
-#breadcrumb li {
-    display: inline;
-}
-
-/* Add a slash symbol (/) before/behind each list item */
-#breadcrumb li+li:before {
-    padding: 8px;
-    color: black;
-    content: "/\00a0";
-}
-
-/* Add a color to all links inside the list */
-#breadcrumb li a {
-    color: #0275d8;
-    text-decoration: none;
-}
-
-/* Add a color on mouse-over */
-#breadcrumb li a:hover {
-    color: #01447e;
-    text-decoration: underline;
-}
 /* ====================== Map ====================== */
 #map {
   height: 30vh;
@@ -135,78 +106,4 @@ nav h1 a {
   padding-bottom: 10px;
   text-decoration: none;
   letter-spacing: 5px;
-}
-
-/* ====================== Restaurant Details ====================== */
-
-.inside #map-container {
-  height: 30vh;
-  width: 100%;
-}
-#maincontent {
-  max-width: 1600px;
-  margin-left: auto;
-  margin-right: auto;
-}
-#restaurant-name {
-  background-color: #0c1f58;
-  color: #fff;
-  font-size: 1.8rem;
-  font-weight: 200;
-  padding: 10px;
-  text-transform: uppercase;
-}
-#restaurant-img {
-  width: 100%;
-  max-width: 800px;
-}
-#restaurant-address {
-  font-weight: bold;
-}
-#restaurant-cuisine {
-  background-color: #333;
-  color: #ddd;
-  font-size: 12pt;
-  font-weight: 300;
-  letter-spacing: 10px;
-  margin: 0 0 20px;
-  text-align: center;
-  text-transform: uppercase;
-  max-width: 800px;
-}
-#restaurant-container {
-  border-bottom: 1px solid #d9d9d9;
-  border-top: 1px solid #fff;
-  padding: 20px;
-}
-.restaurant-info {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  grid-gap: 20px;
-}
-#restaurant-hours td {
-  color: #333;
-  padding: 0;
-}
-#reviews-container {
-  margin: 20px;
-}
-#reviews-container h2 {
-  color: #0c1f58;
-  font-size: 24pt;
-  font-weight: 300;
-}
-#reviews-list {
-  margin: 0;
-  padding: 0;
-}
-#reviews-list li {
-  background-color: #fff;
-  border: 2px solid #f3f3f3;
-  list-style-type: none;
-  margin: 0 0 20px;
-  padding: 5px 10px;
-  }
-#reviews-list li p {
-  margin: 0 0 10px;
 }
