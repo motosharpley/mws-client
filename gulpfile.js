@@ -1,8 +1,13 @@
 const gulp = require('gulp');
+const del = require('del');
+const runSequence = require('run-sequence');
 const htmlmin = require('gulp-htmlmin');
 const cleanCSS = require('gulp-clean-css');
 const uglify = require('gulp-uglify-es').default;
 const pump = require('pump');
+
+// this task removes old files
+gulp.task('clean', () => del('dist', {dot: true}));
 
 //  --- Static Assets ---
 gulp.task('html', function() {
@@ -53,5 +58,15 @@ gulp.task('watch', function() {
   gulp.watch('src/**/*', ['default']);
 });
 
-
-gulp.task('default', ['html', 'css', 'img', 'manifest', 'sw', 'js'])
+// this is our default task
+gulp.task('default', ['clean'], cb => {
+  runSequence(
+    'html',
+    'css',
+    'img',
+    'manifest',
+    'sw',
+    'js',
+    cb
+  );
+});
