@@ -1,4 +1,38 @@
 /**
+ * set up indexedDB
+ */
+function getRestaurants() {
+  fetch('http://localhost:1337/restaurants')
+  .then(function(res) {
+    return res.json();
+  }).then(function(data) {
+    restaurants = data;
+  })
+}
+
+getRestaurants();
+
+let dbPromise = idb.open('rr-db', 1, function(upgradeDb) {
+  switch (upgradeDb.oldVersion) {
+    case 0:
+    // placeholder so that switchblock will execute when db is first created
+    case 1:
+    upgradeDb.createObjectStore('restInfo', {keyPath: 'id'});
+  }
+})
+
+
+dbPromise.then(function(db) {
+  let tx = db.transaction('restInfo', 'readwrite');
+  let restaurantStore = tx.objectStore('restInfo');
+  restaurants.forEach(function(restaurant) {
+    restaurantStore.put(restaurant);
+  })
+// TODO CLEAN DB -- LIMIT NUMBER OF ENTRIES
+
+})
+
+/**
  * Common database helper functions.
  */
 class DBHelper {
@@ -11,23 +45,33 @@ class DBHelper {
     const port = 1337; // Change this to your server port
     return `http://localhost:${port}/restaurants`;
   }
- 
+
     /**
    * Fetch all restaurants.
    */
-  // @@ TODO fetch data from indexedDB in catch
+  // static fetchRestaurants(callback) {
+  //   fetch(DBHelper.DATABASE_URL)
+  //     .then(function (res) {
+  //       if(res.ok) {
+  //         return res.json();
+  //       }        
+  //     })
+  //     .then(function (restaurants) {
+  //       callback(null, restaurants);
+  //     })
+  //     .catch(function (error) {
+  //     callback(null, error);
+  //   })
+  // }
+
   static fetchRestaurants(callback) {
-    fetch(DBHelper.DATABASE_URL)
-      .then(function (res) {
-        if(res.ok) {
-          return res.json();
-        }        
-      })
-      .then(function (restaurants) {
-        callback(null, restaurants);
-      })
-      .catch(function (error) {
-      callback(null, error);
+    dbPromise.then(function(db){
+      let tx = db.transaction('restInfo');
+      let restaurantStore = tx.objectStore('restInfo');
+      return restaurantStore.getAll();
+    }).then(function(restaurants) {
+      // console.log(restaurants);
+      callback(null, restaurants)
     })
   }
 
@@ -148,15 +192,6 @@ class DBHelper {
    */
   static urlForRestaurant(restaurant) {
     return (`./restaurant.html?id=${restaurant.id}`);
-  }
-
-  // @@ TODO REFACTOR OR ELIMINATE ??? ******
-  /**
-   * Restaurant image URL.
-   */
-  static imageUrlForRestaurant(restaurant) {
-    return (`/img/${restaurant.photograph}`);
-    // return (`https://motosharpley.github.io/mws-stage-1/img/${restaurant.photograph}`);
   }
 
   /**
