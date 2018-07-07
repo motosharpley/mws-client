@@ -3,17 +3,21 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', function () {
     navigator.serviceWorker.register('sw.js').then(function (registration) {
       if ('sync' in registration) {
-        let review = document.addReview.review.value;
-        let name = document.addReview.name.value;
-        let rating = document.addReview.rating.value;
+        
 
         const reviewForm = document.getElementById('addReview');
 
         reviewForm.addEventListener('submit', function(event) {
           event.preventDefault();
           
+          const id = getParameterByName('id');
+          let review = document.addReview.review.value;
+          let name = document.addReview.name.value;
+          let rating = document.addReview.rating.value;
+
           let newReview = {
-            review : review,
+            restaurant_id : id,
+            comments : review,
             name : name,
             rating : rating
           };
