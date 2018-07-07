@@ -2,6 +2,34 @@
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function () {
     navigator.serviceWorker.register('sw.js').then(function (registration) {
+      if ('sync' in registration) {
+        let review = document.addReview.review.value;
+        let name = document.addReview.name.value;
+        let rating = document.addReview.rating.value;
+
+        const reviewForm = document.getElementById('addReview');
+
+        reviewForm.addEventListener('submit', function(event) {
+          event.preventDefault();
+          
+          let newReview = {
+            review : review,
+            name : name,
+            rating : rating
+          };
+
+          idb.open('reviews', 1, function(upgradeDb) {
+            upgradeDb.createObjectStore('outbox', { autoIncrement : true, keyPath: 'id' });
+          }).then(function(db) {
+            var transaction = db.transaction('outbox', 'readwrite');
+            return transaction.objectStore('outbox').put(newReview);
+          }).then(function() {
+            // register for sync and clean up the form
+            return registration.sync.register('outbox');
+          });
+          
+        })
+      }
       // Registration was successful
       console.log('ServiceWorker registration successful with scope: ', registration.scope);
     }, function (err) {
