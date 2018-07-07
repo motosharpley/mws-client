@@ -72,3 +72,8 @@ self.addEventListener('fetch', function(event) {
     })
   );
 });
+
+// listen for the sync event
+self.addEventListener('sync', function(event) {
+ console.log(event);
+});
