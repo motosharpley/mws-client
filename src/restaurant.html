@@ -53,11 +53,15 @@
           <hr>
           <p id="restaurant-address"></p>
         </div>
+        <div >
+          <button id="favButton">Add to Favorites</button>
+        </div>
       </div>
     </section>
     <!-- end restaurant -->
     <!-- Beginning reviews -->
     <section id="reviews-container">
+      <!-- Add new Review Form -->
       <form id="addReview" name="addReview" action="" method="post">
         <label for="review">How did you like it? Add your review here!</label>
         <textarea name="review" id="add-review" cols="30" rows="5"></textarea>
@@ -67,6 +71,7 @@
         <input type="number" name="rating" id="rating">
         <button type="submit">Submit</button>
       </form>
+      <!-- End Review form -->
       <ul id="reviews-list"></ul>
     </section>
     <!-- End reviews -->
