@@ -163,6 +163,16 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
  /**
   *  @@ add / remove from favorites
   */
+ (addFavorite = () => {
+   const favButton = document.getElementById('favButton');
+    favButton.addEventListener('click', function(event) {
+      event.preventDefault();
+      const restaurant_id = getParameterByName('id');
+      fetch(`http://localhost:1337/restaurants/${restaurant_id}/?is_favorite=true`,{
+        method: 'POST'
+      })      
+    })
+ })();
 
 /**
  * Create all reviews HTML and add them to the webpage.
