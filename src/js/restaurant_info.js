@@ -162,6 +162,8 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
 
  /**
   *  @@ add / remove from favorites
+  *  @TODO make fav toggle between true : false
+  *  @TODO replace button with icon
   */
  (addFavorite = () => {
    const favButton = document.getElementById('favButton');
@@ -169,7 +171,10 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
       event.preventDefault();
       const restaurant_id = getParameterByName('id');
       fetch(`http://localhost:1337/restaurants/${restaurant_id}/?is_favorite=true`,{
-        method: 'POST'
+        method: 'PUT'
+      }).then(function(){
+        favButton.style.color = 'red';
+        favButton.innerText = 'Remove from favorites';
       })      
     })
  })();
