@@ -62,13 +62,11 @@
     <!-- Beginning reviews -->
     <section id="reviews-container">
       <!-- Add new Review Form -->
-      <form id="addReview" name="addReview" action="" method="post">
-        <label for="review">How did you like it? Add your review here!</label>
-        <textarea name="review" id="add-review" cols="30" rows="5"></textarea>
-        <label for="name">Your name</label>
-        <input type="text" name="name">
-        <label for="rating">Rate us from 1-5</label>
-        <input type="number" name="rating" id="rating">
+      <form id="addReview" name="addReview" role="form" aria-label="review form" method="post">
+        <textarea name="review" id="add-review" placeholder="Add your Review" cols="30" rows="5" aria-label="add review"></textarea>
+        <input type="text" name="name" placeholder="Your name" aria-label="name">
+        <label for="rating">Rate us</label>
+        <input type="number" name="rating" id="rating" placeholder="5" aria-label="rating">
         <button type="submit">Submit</button>
       </form>
       <!-- End Review form -->
