@@ -17,9 +17,9 @@ if ('serviceWorker' in navigator) {
 
           let newReview = {
             restaurant_id : id,
-            comments : review,
             name : name,
-            rating : rating
+            rating : rating,
+            comments : review
           };
 
           idb.open('reviews', 1, function(upgradeDb) {
@@ -52,6 +52,8 @@ var newMap;
 document.addEventListener('DOMContentLoaded', (event) => {
   initMap();
 });
+
+
 
 
 /**
