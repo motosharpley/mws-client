@@ -101,6 +101,14 @@ nav h1 a {
 #restaurant-address {
   font-weight: bold;
 }
+#favButton {
+  width: 100%;
+  background-color: #0c1f58;
+  color: #fff;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  border: none;
+}
 #restaurant-cuisine {
   background-color: #333;
   color: #ddd;
