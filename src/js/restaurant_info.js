@@ -28,6 +28,7 @@ if ('serviceWorker' in navigator) {
             var transaction = db.transaction('outbox', 'readwrite');
             return transaction.objectStore('outbox').put(newReview);
           }).then(function() {
+            console.log('new review has been added to idb');
             // register for sync and clean up the form
             return registration.sync.register('outbox');
           });
@@ -53,8 +54,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
   initMap();
 });
 
+window.addEventListener("online", function(){
+  console.log("Network is online")
+}, false);
 
-
+window.addEventListener("offline", function(){
+  console.log("Network is offline")
+}, false);
 
 /**
  * Initialize leaflet map
@@ -163,22 +169,34 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
  */
 
  /**
-  *  @@ add / remove from favorites
-  *  @TODO make fav toggle between true : false
-  *  @TODO replace button with icon
+  *  
+  *  @TODO HANDLE SETTING INITIAL STATE ** BUGFIX **
   */
  (addFavorite = () => {
    const favButton = document.getElementById('favButton');
+
     favButton.addEventListener('click', function(event) {
       event.preventDefault();
       const restaurant_id = getParameterByName('id');
-      fetch(`http://localhost:1337/restaurants/${restaurant_id}/?is_favorite=true`,{
-        method: 'PUT'
-      }).then(function(){
+      let favorite = self.restaurant.is_favorite;
+      
+
+      if (!favorite){
+        fetch(`http://localhost:1337/restaurants/${restaurant_id}/?is_favorite=true`,{
+          method: 'PUT'
+        });
         favButton.style.color = 'red';
         favButton.innerText = 'Remove from favorites';
-      })      
-    })
+        self.restaurant.is_favorite = true;
+      } else {
+        fetch(`http://localhost:1337/restaurants/${restaurant_id}/?is_favorite=false`,{
+              method: 'PUT'
+          });
+            favButton.style.color = 'white';
+            favButton.innerText = 'Add To Favorites';
+            self.restaurant.is_favorite = false;
+      }
+    }) 
  })();
 
 /**
