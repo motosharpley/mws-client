@@ -3,7 +3,6 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', function () {
     navigator.serviceWorker.register('sw.js').then(function (registration) {
       if ('sync' in registration) {
-        
 
         const reviewForm = document.getElementById('addReview');
 
@@ -55,11 +54,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
 });
 
 window.addEventListener("online", function(){
-  console.log("Network is online")
+  console.log("Network is online");
+  this.location.reload(true);
 }, false);
 
 window.addEventListener("offline", function(){
-  console.log("Network is offline")
+  alert("Network is offline");
 }, false);
 
 /**
@@ -103,7 +103,6 @@ fetchRestaurantFromURL = (callback) => {
     error = 'No restaurant id in URL'
     callback(error, null);
   } else {
-    // @@ TODO refactor to fetch from idb index
     DBHelper.fetchRestaurantById(id, (error, restaurant) => {
       self.restaurant = restaurant;
       if (!restaurant) {
@@ -163,10 +162,6 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
     hours.appendChild(row);
   }
 }
-
-/**
- * @@ TODO Add a new Review
- */
 
  /**
   *  
