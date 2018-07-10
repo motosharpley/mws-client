@@ -63,10 +63,23 @@
     <section id="reviews-container">
       <!-- Add new Review Form -->
       <form id="addReview" name="addReview" role="form" aria-label="review form" method="post">
-        <textarea name="review" id="add-review" placeholder="Add your Review" cols="30" rows="5" aria-label="add review"></textarea>
-        <input type="text" name="name" placeholder="Your name" aria-label="name">
-        <label for="rating">Rate us</label>
-        <input type="number" name="rating" id="rating" placeholder="5" aria-label="rating">
+        <textarea id="add-review" name="review"  placeholder="Add your Review" cols="30" rows="5" aria-label="add review" required></textarea>
+        <input id="userName" type="text" name="name" placeholder="Your name" aria-label="name" required>
+        
+        <fieldset name="rating" role="radio" aria-label="rating">
+          <label for="rating">Rating</label>
+          <input type="radio" id="1-star" name="rating" value="1" required>
+          <label for="1-star">1-Star</label>
+          <input type="radio" id="2-star" name="rating" value="2" required>
+          <label for="2-star">2-Star</label>
+          <input type="radio" id="3-star" name="rating" value="3" required>
+          <label for="3-star">3-Star</label>
+          <input type="radio" id="4-star" name="rating" value="4" required>
+          <label for="4-star">4-Star</label>
+          <input type="radio" id="5-star" name="rating" value="5" required>
+          <label for="5-star">5-Star</label>
+        </fieldset>
+        
         <button type="submit">Submit</button>
       </form>
       <!-- End Review form -->
