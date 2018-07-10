@@ -27,19 +27,6 @@ var markers = []
     fetchCuisines();
   });
 
-  // @@ TODO GET RESTAURANT DATA FROM INDEXEDDB ****
-
-  // function getLocalRestData() {
-  //   if (!('indexedDB' in window)) {return null;}
-  //   return dbPromise.then(db => {
-  //     const tx = db.transaction('restInfo', 'readonly');
-  //     const store = tx.objectStore('restInfo');
-  //     return store.getAll();
-  //   });
-  // }
-
-
-  // @@ TODO GET NEIGHBORHOODS INDEX FROM IDB *****
   /**
    * Fetch all neighborhoods and set their HTML.
    */
@@ -68,8 +55,6 @@ var markers = []
     });
   }
 
-
-  // @@ TODO GET CUISINES INDEX FROM IDB *****
   /**
    * Fetch all cuisines and set their HTML.
    */
@@ -99,7 +84,6 @@ var markers = []
     });
   }
 
-
   /**
  * Initialize leaflet map, called from HTML.
  */
@@ -121,7 +105,6 @@ initMap = () => {
   updateRestaurants();
 }
 
-
   /**
    * Update page and map for current restaurants.
    */
@@ -134,7 +117,7 @@ initMap = () => {
 
     const cuisine = cSelect[cIndex].value;
     const neighborhood = nSelect[nIndex].value;
-// @@ TODO REFACTOR TO USE IDB INDEX
+
     DBHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, (error, restaurants) => {
       if (error) { // Got an error!
         console.error(error);
