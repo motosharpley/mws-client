@@ -8,7 +8,7 @@ This is the client side application for the stage 2 MWS Nano Degree. The static 
 
 The project is configured to build static assets using gulp tasks and all production files will be placed in the 'dist' directory when you run the `gulp` command from the root directory.
 
-The data set relies on the mock API which can be found in the following repository [Api Repo here!](https://github.com/motosharpley/mws-stage-2) there are installation and start-up instructions accordingly in the readme.md file 
+The data set relies on the mock API which can be found in the following repository [Api Repo here!](https://github.com/motosharpley/mws-stage-3) there are installation and start-up instructions accordingly in the readme.md file
 
 ### Installation and start up
 

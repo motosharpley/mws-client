@@ -1,35 +1,13 @@
 /**
  * set up indexedDB
  */
-function getRestaurants() {
-  fetch('http://localhost:1337/restaurants')
-  .then(function(res) {
-    return res.json();
-  }).then(function(data) {
-    restaurants = data;
-  })
-}
-
-getRestaurants();
-
 let dbPromise = idb.open('rr-db', 1, function(upgradeDb) {
   switch (upgradeDb.oldVersion) {
     case 0:
     // placeholder so that switchblock will execute when db is first created
     case 1:
-    upgradeDb.createObjectStore('restInfo', {keyPath: 'id'});
+    upgradeDb.createObjectStore('restaurants', {keyPath: 'id'});
   }
-})
-
-
-dbPromise.then(function(db) {
-  let tx = db.transaction('restInfo', 'readwrite');
-  let restaurantStore = tx.objectStore('restInfo');
-  restaurants.forEach(function(restaurant) {
-    restaurantStore.put(restaurant);
-  })
-// TODO CLEAN DB -- LIMIT NUMBER OF ENTRIES
-
 })
 
 /**
@@ -49,29 +27,38 @@ class DBHelper {
     /**
    * Fetch all restaurants.
    */
-  // static fetchRestaurants(callback) {
-  //   fetch(DBHelper.DATABASE_URL)
-  //     .then(function (res) {
-  //       if(res.ok) {
-  //         return res.json();
-  //       }        
-  //     })
-  //     .then(function (restaurants) {
-  //       callback(null, restaurants);
-  //     })
-  //     .catch(function (error) {
-  //     callback(null, error);
-  //   })
-  // }
 
   static fetchRestaurants(callback) {
+    // get restaurants from indexedDB
     dbPromise.then(function(db){
-      let tx = db.transaction('restInfo');
-      let restaurantStore = tx.objectStore('restInfo');
+      let tx = db.transaction('restaurants');
+      let restaurantStore = tx.objectStore('restaurants');
       return restaurantStore.getAll();
-    }).then(function(restaurants) {
-      // console.log(restaurants);
-      callback(null, restaurants)
+    })
+    .then(function(restaurants) {
+      if (restaurants.length !== 0) {
+        callback(null, restaurants);
+      } else {
+        // fetch from network
+        fetch(DBHelper.DATABASE_URL)
+        .then(function (res) {
+          return res.json();
+        })
+        .then(function(restaurants) {
+          // add to indexedDB
+          dbPromise.then(function(db) {
+            let tx = db.transaction('restaurants', 'readwrite');
+            let restaurantStore = tx.objectStore('restaurants');
+            restaurants.forEach(function(restaurant) {
+              restaurantStore.put(restaurant);
+            })
+            callback(null, restaurants);
+          })
+        })
+        .catch(function (error) {
+        callback(null, error);
+      })
+      }      
     })
   }
 

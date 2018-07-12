@@ -2,6 +2,39 @@
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function () {
     navigator.serviceWorker.register('sw.js').then(function (registration) {
+      if ('sync' in registration) {
+
+        const reviewForm = document.getElementById('addReview');
+
+        reviewForm.addEventListener('submit', function(event) {
+          event.preventDefault();
+          
+          const id = getParameterByName('id');
+          let review = document.addReview.review.value;
+          let name = document.addReview.name.value;
+          let rating = document.addReview.rating.value;
+
+          let newReview = {
+            restaurant_id : id,
+            name : name,
+            rating : rating,
+            comments : review
+          };
+
+          idb.open('reviews', 1, function(upgradeDb) {
+            upgradeDb.createObjectStore('outbox', { autoIncrement : true, keyPath: 'id' });
+          }).then(function(db) {
+            var transaction = db.transaction('outbox', 'readwrite');
+            return transaction.objectStore('outbox').put(newReview);
+          
+          }).then(function() {
+            console.log('new review has been added to idb');
+            // register for sync and clean up the form
+            return registration.sync.register('outbox');
+          });
+          
+        })
+      }
       // Registration was successful
       console.log('ServiceWorker registration successful with scope: ', registration.scope);
     }, function (err) {
@@ -21,6 +54,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
   initMap();
 });
 
+window.addEventListener("online", function(){
+  console.log("Network is online");
+  this.location.reload(true);
+}, false);
+
+window.addEventListener("offline", function(){
+  alert("Network is offline");
+}, false);
 
 /**
  * Initialize leaflet map
@@ -63,7 +104,6 @@ fetchRestaurantFromURL = (callback) => {
     error = 'No restaurant id in URL'
     callback(error, null);
   } else {
-    // @@ TODO refactor to fetch from idb index
     DBHelper.fetchRestaurantById(id, (error, restaurant) => {
       self.restaurant = restaurant;
       if (!restaurant) {
@@ -95,7 +135,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
-
+  
   // fill operating hours
   if (restaurant.operating_hours) {
     fillRestaurantHoursHTML();
@@ -124,13 +164,36 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
   }
 }
 
-/**
- * @@ TODO Add a new Review
- */
-
  /**
-  *  @@ add / remove from favorites
+  *  
+  *  Add / Remove from Favorites
   */
+ (addFavorite = () => {
+   const favButton = document.getElementById('favButton');
+
+    favButton.addEventListener('click', function(event) {
+      event.preventDefault();
+      const restaurant_id = getParameterByName('id');
+      let favorite = self.restaurant.is_favorite;
+      
+
+      if (!favorite){
+        fetch(`http://localhost:1337/restaurants/${restaurant_id}/?is_favorite=true`,{
+          method: 'PUT'
+        });
+        favButton.style.color = 'red';
+        favButton.innerText = ' Remove from favorites';
+        self.restaurant.is_favorite = true;
+      } else {
+        fetch(`http://localhost:1337/restaurants/${restaurant_id}/?is_favorite=false`,{
+              method: 'PUT'
+          });
+            favButton.style.color = 'white';
+            favButton.innerText = ' Add To Favorites';
+            self.restaurant.is_favorite = false;
+      }
+    }) 
+ })();
 
 /**
  * Create all reviews HTML and add them to the webpage.

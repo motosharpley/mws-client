@@ -101,6 +101,15 @@ nav h1 a {
 #restaurant-address {
   font-weight: bold;
 }
+#favButton, #addReview button {
+  width: 100%;
+  background-color: #0c1f58;
+  color: #fff;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  border: none;
+  text-align: center;
+}
 #restaurant-cuisine {
   background-color: #333;
   color: #ddd;
@@ -126,6 +135,8 @@ nav h1 a {
   color: #333;
   padding: 0;
 }
+
+/* ====================== Reviews ====================== */
 #reviews-container {
   margin: 20px;
 }
@@ -134,6 +145,11 @@ nav h1 a {
   font-size: 24pt;
   font-weight: 300;
 }
+#addReview {
+  display: grid;
+  row-gap: 5px;  
+}
+
 #reviews-list {
   margin: 0;
   padding: 0;

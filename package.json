@@ -19,6 +19,7 @@
   "homepage": "https://github.com/motosharpley/stage-2-client#readme",
   "dependencies": {
     "express": "^4.16.3",
+    "express-http-to-https": "^1.1.4",
     "idb": "^2.1.2",
     "serve-static": "^1.13.2"
   },

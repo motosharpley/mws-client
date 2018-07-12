@@ -1,3 +1,4 @@
+importScripts('/js/idb.js');
 // set up the cahche
 var staticCache = 'mws-cache-v3';
 var urlsToCache = [
@@ -35,23 +36,23 @@ var urlsToCache = [
 ];
 
 // install service worker
-self.addEventListener('install', function(event) {
+self.addEventListener('install', function (event) {
   event.waitUntil(
-    caches.open(staticCache).then(function(cache) {
+    caches.open(staticCache).then(function (cache) {
       return cache.addAll(urlsToCache);
     })
   );
 });
 
 // activate service worker fill and clean/delete old caches
-self.addEventListener('activate', function(event) {
+self.addEventListener('activate', function (event) {
   event.waitUntil(
-    caches.keys().then(function(cacheNames) {
+    caches.keys().then(function (cacheNames) {
       return Promise.all(
-        cacheNames.filter(function(cacheName) {
+        cacheNames.filter(function (cacheName) {
           return cacheName.startsWith('mws-') &&
-                 cacheName != staticCache;
-        }).map(function(cacheName) {
+            cacheName != staticCache;
+        }).map(function (cacheName) {
           return caches.delete(cacheName);
         })
       );
@@ -60,15 +61,63 @@ self.addEventListener('activate', function(event) {
 });
 
 // intercept requests and serve from cache 
-self.addEventListener('fetch', function(event) {
+self.addEventListener('fetch', function (event) {
   event.respondWith(
-    caches.match(event.request).then(function(resp) {
-      return resp || fetch(event.request).then(function(response) {
-        return caches.open(staticCache).then(function(cache) {
+    caches.match(event.request).then(function (resp) {
+      return resp || fetch(event.request).then(function (response) {
+        return caches.open(staticCache).then(function (cache) {
           cache.put(event.request, response.clone());
           return response;
-        });  
+        });
       });
     })
   );
 });
+
+// var store = {
+//   db: null,
+ 
+//   init: function() {
+//     if (store.db) { return Promise.resolve(store.db); }
+//     return idb.open('reviews', 1, function(upgradeDb) {
+//       upgradeDb.createObjectStore('outbox', { autoIncrement : true, keyPath: 'id' });
+//     }).then(function(db) {
+//       return store.db = db;
+//     });
+//   },
+ 
+//   outbox: function(mode) {
+//     return store.init().then(function(db) {
+//       return db.transaction('outbox', mode).objectStore('outbox');
+//     })
+//   }
+// }
+
+// listen for the sync event
+self.addEventListener('sync', function (event) {
+  event.waitUntil(
+    store.outbox('readonly').then(function (outbox) {
+      return outbox.getAll();
+    }).then(function (reviews) {
+      return Promise.all(reviews.map(function (review) {
+        return fetch('http://localhost:1337/reviews/', {
+          method: 'POST',
+          body: JSON.stringify(review),
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+        }).then(function (response) {
+          return response.json();
+        }).then(function (data) {
+          if (data.result === 'success') {
+            return store.outbox('readwrite').then(function (outbox) {
+              return outbox.delete(review.id);
+            });
+          }
+        })
+      }).catch(function (err) { console.error(err); })
+      )
+    })
+  )
+})
