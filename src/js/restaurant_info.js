@@ -26,6 +26,7 @@ if ('serviceWorker' in navigator) {
           }).then(function(db) {
             var transaction = db.transaction('outbox', 'readwrite');
             return transaction.objectStore('outbox').put(newReview);
+          
           }).then(function() {
             console.log('new review has been added to idb');
             // register for sync and clean up the form
@@ -134,7 +135,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
-
+  
   // fill operating hours
   if (restaurant.operating_hours) {
     fillRestaurantHoursHTML();
@@ -165,7 +166,7 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
 
  /**
   *  
-  *  @TODO HANDLE SETTING INITIAL STATE ** BUGFIX **
+  *  Add / Remove from Favorites
   */
  (addFavorite = () => {
    const favButton = document.getElementById('favButton');
@@ -181,14 +182,14 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
           method: 'PUT'
         });
         favButton.style.color = 'red';
-        favButton.innerText = 'Remove from favorites';
+        favButton.innerText = ' Remove from favorites';
         self.restaurant.is_favorite = true;
       } else {
         fetch(`http://localhost:1337/restaurants/${restaurant_id}/?is_favorite=false`,{
               method: 'PUT'
           });
             favButton.style.color = 'white';
-            favButton.innerText = 'Add To Favorites';
+            favButton.innerText = ' Add To Favorites';
             self.restaurant.is_favorite = false;
       }
     }) 
