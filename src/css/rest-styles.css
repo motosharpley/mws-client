@@ -108,6 +108,7 @@ nav h1 a {
   padding-top: 3px;
   padding-bottom: 3px;
   border: none;
+  text-align: center;
 }
 #restaurant-cuisine {
   background-color: #333;
