@@ -74,24 +74,24 @@ self.addEventListener('fetch', function (event) {
   );
 });
 
-var store = {
-  db: null,
+// var store = {
+//   db: null,
  
-  init: function() {
-    if (store.db) { return Promise.resolve(store.db); }
-    return idb.open('reviews', 1, function(upgradeDb) {
-      upgradeDb.createObjectStore('outbox', { autoIncrement : true, keyPath: 'id' });
-    }).then(function(db) {
-      return store.db = db;
-    });
-  },
+//   init: function() {
+//     if (store.db) { return Promise.resolve(store.db); }
+//     return idb.open('reviews', 1, function(upgradeDb) {
+//       upgradeDb.createObjectStore('outbox', { autoIncrement : true, keyPath: 'id' });
+//     }).then(function(db) {
+//       return store.db = db;
+//     });
+//   },
  
-  outbox: function(mode) {
-    return store.init().then(function(db) {
-      return db.transaction('outbox', mode).objectStore('outbox');
-    })
-  }
-}
+//   outbox: function(mode) {
+//     return store.init().then(function(db) {
+//       return db.transaction('outbox', mode).objectStore('outbox');
+//     })
+//   }
+// }
 
 // listen for the sync event
 self.addEventListener('sync', function (event) {
