@@ -2,39 +2,6 @@
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function () {
     navigator.serviceWorker.register('sw.js').then(function (registration) {
-      if ('sync' in registration) {
-
-        const reviewForm = document.getElementById('addReview');
-
-        reviewForm.addEventListener('submit', function(event) {
-          event.preventDefault();
-          
-          const id = getParameterByName('id');
-          let review = document.addReview.review.value;
-          let name = document.addReview.name.value;
-          let rating = document.addReview.rating.value;
-
-          let newReview = {
-            restaurant_id : id,
-            name : name,
-            rating : rating,
-            comments : review
-          };
-
-          idb.open('reviews', 1, function(upgradeDb) {
-            upgradeDb.createObjectStore('outbox', { autoIncrement : true, keyPath: 'id' });
-          }).then(function(db) {
-            var transaction = db.transaction('outbox', 'readwrite');
-            return transaction.objectStore('outbox').put(newReview);
-          
-          }).then(function() {
-            console.log('new review has been added to idb');
-            // register for sync and clean up the form
-            return registration.sync.register('outbox');
-          });
-          
-        })
-      }
       // Registration was successful
       console.log('ServiceWorker registration successful with scope: ', registration.scope);
     }, function (err) {
@@ -54,14 +21,68 @@ document.addEventListener('DOMContentLoaded', (event) => {
   initMap();
 });
 
-window.addEventListener("online", function(){
-  console.log("Network is online");
-  this.location.reload(true);
-}, false);
 
-window.addEventListener("offline", function(){
-  alert("Network is offline");
-}, false);
+
+
+// window.addEventListener("reload", function(){
+//   location.reload(true);
+// }, true);
+
+(addNewReview = () => {
+
+  const reviewForm = document.getElementById('addReview');
+  let online = window.navigator.onLine;
+  console.log(online);
+
+  window.addEventListener("offline", function(){
+    alert("Network is offline");
+    online = false;
+  }, false);
+
+    reviewForm.addEventListener('submit', function(event) {
+    event.preventDefault();
+    
+    const id = getParameterByName('id');
+    let review = document.addReview.review.value;
+    let name = document.addReview.name.value;
+    let rating = document.addReview.rating.value;
+
+    let newReview = {
+      restaurant_id : id,
+      name : name,
+      rating : rating,
+      comments : review
+    };
+
+    
+
+    if (online) {
+      fetch('http://localhost:1337/reviews/', {
+            method: 'POST',
+            body: JSON.stringify(newReview),
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            }
+      })
+      location.reload(true);
+    } else {
+      idb.open('reviews', 1, function(upgradeDb) {
+        upgradeDb.createObjectStore('outbox', { autoIncrement : true, keyPath: 'id' });
+      }).then(function(db) {
+        var transaction = db.transaction('outbox', 'readwrite');
+        return transaction.objectStore('outbox').put(newReview);
+      
+      }).then(function() {
+        console.log('new review has been added to idb');
+        // navigator.serviceWorker.ready.then(function(swRegistration) {
+        //   return swRegistration.sync.register('reviewSync');
+        // });
+      });
+    }     
+        
+  })
+})();
 
 /**
  * Initialize leaflet map
@@ -135,6 +156,8 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
+
+  setFavButton(restaurant.is_favorite);
   
   // fill operating hours
   if (restaurant.operating_hours) {
@@ -168,32 +191,65 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
   *  
   *  Add / Remove from Favorites
   */
- (addFavorite = () => {
-   const favButton = document.getElementById('favButton');
+ const favButton = document.getElementById('favButton');
+ let favorite;
 
-    favButton.addEventListener('click', function(event) {
-      event.preventDefault();
-      const restaurant_id = getParameterByName('id');
-      let favorite = self.restaurant.is_favorite;
+ setFavButton = (status) => {
+  if (status === 'true'){
+    favButton.style.color = 'red';
+    favButton.innerText = ' Remove from favorites';
+    favorite = true;
+  } else {
+    favButton.style.color = 'white';
+    favButton.innerText = ' Add To Favorites';
+    favorite = false;
+  }
+}
+
+  favButton.addEventListener('click', function(event) {
+    event.preventDefault();
+    const restaurant_id = getParameterByName('id');
+        
+    if (!favorite){
+      fetch(`http://localhost:1337/restaurants/${restaurant_id}/?is_favorite=true`,{
+        method: 'put'
+      });
+      setFavButton('true');
+      location.reload(true);
+    } else {
+      fetch(`http://localhost:1337/restaurants/${restaurant_id}/?is_favorite=false`,{
+        method: 'put'
+      });
+      setFavButton('false');
+    }
+    
+  })
+//  (addFavorite = () => {
+//    const favButton = document.getElementById('favButton');
+
+//     favButton.addEventListener('click', function(event) {
+//       event.preventDefault();
+//       const restaurant_id = getParameterByName('id');
+//       let favorite = self.restaurant.is_favorite;
       
 
-      if (!favorite){
-        fetch(`http://localhost:1337/restaurants/${restaurant_id}/?is_favorite=true`,{
-          method: 'PUT'
-        });
-        favButton.style.color = 'red';
-        favButton.innerText = ' Remove from favorites';
-        self.restaurant.is_favorite = true;
-      } else {
-        fetch(`http://localhost:1337/restaurants/${restaurant_id}/?is_favorite=false`,{
-              method: 'PUT'
-          });
-            favButton.style.color = 'white';
-            favButton.innerText = ' Add To Favorites';
-            self.restaurant.is_favorite = false;
-      }
-    }) 
- })();
+//       if (!favorite){
+//         fetch(`http://localhost:1337/restaurants/${restaurant_id}/?is_favorite=true`,{
+//           method: 'PUT'
+//         });
+//         favButton.style.color = 'red';
+//         favButton.innerText = ' Remove from favorites';
+//         self.restaurant.is_favorite = true;
+//       } else {
+//         fetch(`http://localhost:1337/restaurants/${restaurant_id}/?is_favorite=false`,{
+//               method: 'PUT'
+//           });
+//             favButton.style.color = 'white';
+//             favButton.innerText = ' Add To Favorites';
+//             self.restaurant.is_favorite = false;
+//       }
+//     }) 
+//  })();
 
 /**
  * Create all reviews HTML and add them to the webpage.
@@ -275,3 +331,52 @@ getParameterByName = (name, url) => {
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
+
+var store = {
+  db: null,
+ 
+  init: function() {
+    if (store.db) { return Promise.resolve(store.db); }
+    return idb.open('reviews', 1, function(upgradeDb) {
+      upgradeDb.createObjectStore('outbox', { autoIncrement : true, keyPath: 'id' });
+    }).then(function(db) {
+      return store.db = db;
+    });
+  },
+ 
+  outbox: function(mode) {
+    return store.init().then(function(db) {
+      return db.transaction('outbox', mode).objectStore('outbox');
+    })
+  }
+}
+
+window.addEventListener("online", function(){
+  console.log("Network is online");
+  // get reviews from idb and send to network
+  store.outbox('readonly').then(function (outbox) {
+    return outbox.getAll();
+  }).then(function (reviews) {
+    return Promise.all(reviews.map(function (review) {
+      return fetch('http://localhost:1337/reviews/', {
+        method: 'POST',
+        body: JSON.stringify(review),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      }).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        if (data.result === 'success') {
+          return store.outbox('readwrite').then(function (outbox) {
+            return outbox.delete(review.id);
+          });
+        }
+      }).then(function() {
+        location.reload(true);
+      })
+    }).catch(function (err) { console.error(err); })
+    )
+  })
+}, false);
