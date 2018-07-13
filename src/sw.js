@@ -3,6 +3,10 @@ importScripts('/js/idb.js');
 var staticCache = 'mws-cache-v3';
 var urlsToCache = [
   '/',
+  'index.html',
+  'restaurant.html',
+  'css/styles.css',
+  'css/rest-styles.css',
   'img/1.jpg',
   'img/2.jpg',
   'img/3.jpg',
@@ -60,7 +64,8 @@ self.addEventListener('activate', function (event) {
   );
 });
 
-// intercept requests and serve from cache 
+
+// // intercept requests and serve from cache 
 self.addEventListener('fetch', function (event) {
   event.respondWith(
     caches.match(event.request).then(function (resp) {
@@ -73,6 +78,9 @@ self.addEventListener('fetch', function (event) {
     })
   );
 });
+
+
+
 
 // var store = {
 //   db: null,
@@ -94,30 +102,60 @@ self.addEventListener('fetch', function (event) {
 // }
 
 // listen for the sync event
-self.addEventListener('sync', function (event) {
-  event.waitUntil(
-    store.outbox('readonly').then(function (outbox) {
-      return outbox.getAll();
-    }).then(function (reviews) {
-      return Promise.all(reviews.map(function (review) {
-        return fetch('http://localhost:1337/reviews/', {
-          method: 'POST',
-          body: JSON.stringify(review),
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          }
-        }).then(function (response) {
-          return response.json();
-        }).then(function (data) {
-          if (data.result === 'success') {
-            return store.outbox('readwrite').then(function (outbox) {
-              return outbox.delete(review.id);
-            });
-          }
-        })
-      }).catch(function (err) { console.error(err); })
-      )
-    })
-  )
-})
+// self.addEventListener('sync', function (event) {
+//   console.log('sync event fired');
+//   event.waitUntil(
+//     store.outbox('readonly').then(function (outbox) {
+//       return outbox.getAll();
+//     }).then(function (reviews) {
+//       return Promise.all(reviews.map(function (review) {
+//         return fetch('http://localhost:1337/reviews/', {
+//           method: 'POST',
+//           body: JSON.stringify(review),
+//           headers: {
+//             'Accept': 'application/json',
+//             'Content-Type': 'application/json'
+//           }
+//         }).then(function (response) {
+//           return response.json();
+//         }).then(function (data) {
+//           if (data.result === 'success') {
+//             return store.outbox('readwrite').then(function (outbox) {
+//               return outbox.delete(review.id);
+//             });
+//           }
+//         })
+//       }).catch(function (err) { console.error(err); })
+//       )
+//     })
+//   )
+// })
+
+// self.addEventListener('sync', function(event) {
+//   console.log('sync event fired');
+//   if (event.tag == 'reviewSync') {
+//     event.waitUntil(store.outbox('readonly').then(function (outbox) {
+//       return outbox.getAll();
+//     }).then(function (reviews) {
+//       return Promise.all(reviews.map(function (review) {
+//         return fetch('http://localhost:1337/reviews/', {
+//           method: 'POST',
+//           body: JSON.stringify(review),
+//           headers: {
+//             'Accept': 'application/json',
+//             'Content-Type': 'application/json'
+//           }
+//         }).then(function (response) {
+//           return response.json();
+//         }).then(function (data) {
+//           if (data.result === 'success') {
+//             return store.outbox('readwrite').then(function (outbox) {
+//               return outbox.delete(review.id);
+//             });
+//           }
+//         })
+//       }).catch(function (err) { console.error(err); })
+//       )
+//     }));
+//   }
+// });

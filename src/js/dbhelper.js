@@ -29,37 +29,41 @@ class DBHelper {
    */
 
   static fetchRestaurants(callback) {
-    // get restaurants from indexedDB
-    dbPromise.then(function(db){
-      let tx = db.transaction('restaurants');
-      let restaurantStore = tx.objectStore('restaurants');
-      return restaurantStore.getAll();
+     // // get restaurants from indexedDB
+    // dbPromise.then(function(db){
+    //   let tx = db.transaction('restaurants');
+    //   let restaurantStore = tx.objectStore('restaurants');
+    //   return restaurantStore.getAll();
+    // })
+    // .then(function(restaurants) {
+    //   if (restaurants.length !== 0) {
+    //     callback(null, restaurants);
+    //   } else {
+        // fetch from network
+    //   }      
+    // })
+
+    // fetch from network
+    fetch(DBHelper.DATABASE_URL)
+    .then(function (res) {
+      return res.json();
     })
     .then(function(restaurants) {
-      if (restaurants.length !== 0) {
+      // add to indexedDB
+      dbPromise.then(function(db) {
+        let tx = db.transaction('restaurants', 'readwrite');
+        let restaurantStore = tx.objectStore('restaurants');
+        restaurants.forEach(function(restaurant) {
+          restaurantStore.put(restaurant);
+        })
         callback(null, restaurants);
-      } else {
-        // fetch from network
-        fetch(DBHelper.DATABASE_URL)
-        .then(function (res) {
-          return res.json();
-        })
-        .then(function(restaurants) {
-          // add to indexedDB
-          dbPromise.then(function(db) {
-            let tx = db.transaction('restaurants', 'readwrite');
-            let restaurantStore = tx.objectStore('restaurants');
-            restaurants.forEach(function(restaurant) {
-              restaurantStore.put(restaurant);
-            })
-            callback(null, restaurants);
-          })
-        })
-        .catch(function (error) {
-        callback(null, error);
       })
-      }      
     })
+    .catch(function (error) {
+    callback(null, error);
+  })
+
+   
   }
 
 
@@ -101,7 +105,6 @@ class DBHelper {
   /**
    * Fetch restaurants by a neighborhood with proper error handling.
    */
-  // @@ TODO change to pull neighborhoods from idb index
   static fetchRestaurantByNeighborhood(neighborhood, callback) {
     // Fetch all restaurants
     DBHelper.fetchRestaurants((error, restaurants) => {
