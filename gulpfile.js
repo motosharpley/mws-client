@@ -1,6 +1,5 @@
 const gulp = require('gulp');
 const del = require('del');
-const workboxBuild = require('workbox-build');
 const runSequence = require('run-sequence');
 const htmlmin = require('gulp-htmlmin');
 const cleanCSS = require('gulp-clean-css');
