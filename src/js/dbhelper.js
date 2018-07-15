@@ -27,45 +27,61 @@ class DBHelper {
     /**
    * Fetch all restaurants.
    */
-
   static fetchRestaurants(callback) {
-     // // get restaurants from indexedDB
-    // dbPromise.then(function(db){
+    // get restaurants from indexedDB
+    // dbPromise.then(function (db) {
     //   let tx = db.transaction('restaurants');
     //   let restaurantStore = tx.objectStore('restaurants');
     //   return restaurantStore.getAll();
     // })
-    // .then(function(restaurants) {
-    //   if (restaurants.length !== 0) {
-    //     callback(null, restaurants);
-    //   } else {
-        // fetch from network
-    //   }      
-    // })
+    //   .then(function (restaurants) {
+    //     if (restaurants.length !== 0) {
+    //       callback(null, restaurants);
+    //     } else {
+      
+          // fetch from network
+          fetch(DBHelper.DATABASE_URL)
+            .then(function (res) {
+              return res.json();
+            })
+            .then(function (restaurants) {
+              // add to indexedDB
+              dbPromise.then(function (db) {
+                let tx = db.transaction('restaurants', 'readwrite');
+                let restaurantStore = tx.objectStore('restaurants');
+                restaurants.forEach(function (restaurant) {
+                  restaurantStore.put(restaurant);
+                })
+                callback(null, restaurants);
+              })
+            })
+            .catch(function (error) {
+              callback(null, error);
+            })
+        }
+  //     })
+  // }
 
-    // fetch from network
+  static updateIndexDB()  {
     fetch(DBHelper.DATABASE_URL)
-    .then(function (res) {
-      return res.json();
-    })
-    .then(function(restaurants) {
-      // add to indexedDB
-      dbPromise.then(function(db) {
-        let tx = db.transaction('restaurants', 'readwrite');
-        let restaurantStore = tx.objectStore('restaurants');
-        restaurants.forEach(function(restaurant) {
-          restaurantStore.put(restaurant);
-        })
-        callback(null, restaurants);
-      })
-    })
-    .catch(function (error) {
-    callback(null, error);
-  })
-
-   
+            .then(function (res) {
+              return res.json();
+            })
+            .then(function (restaurants) {
+              // add to indexedDB
+              dbPromise.then(function (db) {
+                let tx = db.transaction('restaurants', 'readwrite');
+                let restaurantStore = tx.objectStore('restaurants');
+                restaurants.forEach(function (restaurant) {
+                  restaurantStore.put(restaurant);
+                })
+            //     callback(null, restaurants);
+            //   })
+            })
+            // .catch(function (error) {
+            //   callback(null, error);
+            })
   }
-
 
   /**
    * Fetch a restaurant by its ID.
@@ -139,7 +155,6 @@ class DBHelper {
     });
   }
 
-  // @@ TODO REFACTOR TO USE IDB INDEX && REFACTOR IN MAIN.JS ****
   /**
    * Fetch all neighborhoods with proper error handling.
    */
@@ -158,7 +173,6 @@ class DBHelper {
     });
   }
 
-  // @@ TODO REFACTOR TO USE IDB INDEX && REFACTOR IN MAIN.JS ****
   /**
    * Fetch all cuisines with proper error handling.
    */

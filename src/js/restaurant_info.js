@@ -21,69 +21,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
   initMap();
 });
 
-
-
-
-// window.addEventListener("reload", function(){
-//   location.reload(true);
-// }, true);
-
-(addNewReview = () => {
-
-  const reviewForm = document.getElementById('addReview');
-  let online = window.navigator.onLine;
-  console.log(online);
-
-  window.addEventListener("offline", function(){
-    alert("Network is offline");
-    online = false;
-  }, false);
-
-    reviewForm.addEventListener('submit', function(event) {
-    event.preventDefault();
-    
-    const id = getParameterByName('id');
-    let review = document.addReview.review.value;
-    let name = document.addReview.name.value;
-    let rating = document.addReview.rating.value;
-
-    let newReview = {
-      restaurant_id : id,
-      name : name,
-      rating : rating,
-      comments : review
-    };
-
-    
-
-    if (online) {
-      fetch('http://localhost:1337/reviews/', {
-            method: 'POST',
-            body: JSON.stringify(newReview),
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            }
-      })
-      location.reload(true);
-    } else {
-      idb.open('reviews', 1, function(upgradeDb) {
-        upgradeDb.createObjectStore('outbox', { autoIncrement : true, keyPath: 'id' });
-      }).then(function(db) {
-        var transaction = db.transaction('outbox', 'readwrite');
-        return transaction.objectStore('outbox').put(newReview);
-      
-      }).then(function() {
-        console.log('new review has been added to idb');
-        // navigator.serviceWorker.ready.then(function(swRegistration) {
-        //   return swRegistration.sync.register('reviewSync');
-        // });
-      });
-    }     
-        
-  })
-})();
-
 /**
  * Initialize leaflet map
  */
@@ -110,7 +47,6 @@ initMap = () => {
     }
   });
 }
-
 
 /**
  * Get current restaurant from page URL.
@@ -188,7 +124,6 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
 }
 
  /**
-  *  
   *  Add / Remove from Favorites
   */
  const favButton = document.getElementById('favButton');
@@ -206,50 +141,24 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
   }
 }
 
-  favButton.addEventListener('click', function(event) {
-    event.preventDefault();
-    const restaurant_id = getParameterByName('id');
-        
-    if (!favorite){
-      fetch(`http://localhost:1337/restaurants/${restaurant_id}/?is_favorite=true`,{
-        method: 'put'
-      });
-      setFavButton('true');
-      location.reload(true);
-    } else {
-      fetch(`http://localhost:1337/restaurants/${restaurant_id}/?is_favorite=false`,{
-        method: 'put'
-      });
-      setFavButton('false');
-    }
-    
-  })
-//  (addFavorite = () => {
-//    const favButton = document.getElementById('favButton');
-
-//     favButton.addEventListener('click', function(event) {
-//       event.preventDefault();
-//       const restaurant_id = getParameterByName('id');
-//       let favorite = self.restaurant.is_favorite;
-      
-
-//       if (!favorite){
-//         fetch(`http://localhost:1337/restaurants/${restaurant_id}/?is_favorite=true`,{
-//           method: 'PUT'
-//         });
-//         favButton.style.color = 'red';
-//         favButton.innerText = ' Remove from favorites';
-//         self.restaurant.is_favorite = true;
-//       } else {
-//         fetch(`http://localhost:1337/restaurants/${restaurant_id}/?is_favorite=false`,{
-//               method: 'PUT'
-//           });
-//             favButton.style.color = 'white';
-//             favButton.innerText = ' Add To Favorites';
-//             self.restaurant.is_favorite = false;
-//       }
-//     }) 
-//  })();
+favButton.addEventListener('click', function(event) {
+  event.preventDefault();
+  const restaurant_id = getParameterByName('id');
+   
+  if (!favorite){
+    fetch(`http://localhost:1337/restaurants/${restaurant_id}/?is_favorite=true`,{
+      method: 'PUT'
+    });
+    console.log('fav set to true');
+    setFavButton('true');
+  } else {
+    fetch(`http://localhost:1337/restaurants/${restaurant_id}/?is_favorite=false`,{
+      method: 'PUT'
+    });
+    console.log('fav set to false');
+    setFavButton('false');
+  }
+})
 
 /**
  * Create all reviews HTML and add them to the webpage.
@@ -307,6 +216,57 @@ createReviewHTML = (review) => {
 }
 
 /**
+ * add new review
+ */
+  const reviewForm = document.getElementById('addReview');
+  let online = window.navigator.onLine;
+  console.log(online);
+
+  window.addEventListener("offline", function(){
+    alert("Network is offline");
+    online = false;
+  }, false);
+
+    reviewForm.addEventListener('submit', function(event) {
+    event.preventDefault();
+    
+    const id = getParameterByName('id');
+    let review = document.addReview.review.value;
+    let name = document.addReview.name.value;
+    let rating = document.addReview.rating.value;
+
+    let newReview = {
+      restaurant_id : id,
+      name : name,
+      rating : rating,
+      comments : review
+    };
+
+    // If online send to api DB
+    if (online) {
+      fetch('http://localhost:1337/reviews/', {
+            method: 'POST',
+            body: JSON.stringify(newReview),
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            }
+      })
+      location.reload();
+    } else {
+      idb.open('reviews', 1, function(upgradeDb) {
+        upgradeDb.createObjectStore('outbox', { autoIncrement : true, keyPath: 'id' });
+      }).then(function(db) {
+        var transaction = db.transaction('outbox', 'readwrite');
+        return transaction.objectStore('outbox').put(newReview);
+      
+      }).then(function() {
+        alert('Your new review has been stored locally and will be sent to the server when network connection returns');
+      });
+    }
+  })
+
+/**
  * Add restaurant name to the breadcrumb navigation menu
  */
 fillBreadcrumb = (restaurant = self.restaurant) => {
@@ -332,6 +292,10 @@ getParameterByName = (name, url) => {
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
+/**
+ * IndexedDB utilities for handling offline review submissions
+ */
+
 var store = {
   db: null,
  
@@ -350,6 +314,10 @@ var store = {
     })
   }
 }
+
+/**
+ * Send offline reviews to the server upon re-established network connectivity
+ */
 
 window.addEventListener("online", function(){
   console.log("Network is online");
@@ -373,10 +341,9 @@ window.addEventListener("online", function(){
             return outbox.delete(review.id);
           });
         }
-      }).then(function() {
-        location.reload(true);
       })
     }).catch(function (err) { console.error(err); })
     )
   })
+  location.reload();
 }, false);
