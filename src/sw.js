@@ -1,6 +1,6 @@
 importScripts('/js/idb.js');
 // set up the cahche
-var staticCache = 'mws-cache-v1';
+var staticCache = 'mws-cache-v2';
 var urlsToCache = [
   '/',
   'index.html',
@@ -73,53 +73,56 @@ self.addEventListener('activate', function (event) {
 
 
 
-/**
- *  intercept requests and serve from cache 
- */
-// self.addEventListener('fetch', function (event) {
-//   event.respondWith(
-//     caches.match(event.request).then(function (resp) {
-//       return resp || fetch(event.request).then(function (response) {
-//         return caches.open(staticCache).then(function (cache) {
-//           cache.put(event.request, response.clone());
-//           return response;
-//         });
-//       });
-//     })
-//   );
-// });
+
+// /**
+//  *  intercept requests and serve from cache 
+//  */
+// // self.addEventListener('fetch', function (event) {
+// //   event.respondWith(
+// //     caches.match(event.request).then(function (resp) {
+// //       return resp || fetch(event.request).then(function (response) {
+// //         return caches.open(staticCache).then(function (cache) {
+// //           cache.put(event.request, response.clone());
+// //           return response;
+// //         });
+// //       });
+// //     })
+// //   );
+// // });
+
+// // self.addEventListener('fetch', function(event) {
+// //   event.respondWith(
+// //     caches.open(staticCache).then(function(cache) {
+// //       return cache.match(event.request).then(function (response) {
+// //         return response || fetch(event.request).then(function(response) {
+// //           cache.put(event.request, response.clone());
+// //           return response;
+// //         });
+// //       });
+// //     })
+// //   );
+// // });
+
+self.addEventListener('fetch', function(event) {
+  event.respondWith(
+    fetch(event.request).then(function (response) {
+      return caches.open(staticCache).then(function (cache) {
+        cache.put(event.request, response.clone());
+        return response;
+        });
+      }).catch(function() {
+        return caches.match(event.request);
+    })
+  );
+});
+
+
+
+
 
 /**
- *  stale while revalidate
+ * sync event to update cache
  */
-// self.addEventListener('fetch', function(event) {
-//   event.respondWith(
-//     caches.open(staticCache).then(function(cache) {
-//       return cache.match(event.request).then(function(response) {
-//         var fetchPromise = fetch(event.request).then(function(networkResponse) {
-//           cache.put(event.request, networkResponse.clone());
-//           return networkResponse;
-//         })
-//         return response || fetchPromise;
-//       })
-//     })
-//   );
-// });
-
-/**
- * cache then network
- */
-// self.addEventListener('fetch', function(event) {
-//   event.respondWith(
-//     caches.open(staticCache).then(function(cache) {
-//       return fetch(event.request).then(function(response) {
-//         cache.put(event.request, response.clone());
-//         return response;
-//       });
-//     })
-//   );
-// });
-
 // self.addEventListener('sync', function (event) {
 //   event.waitUntil(
 //     caches.open(staticCache).then(function (cache) {

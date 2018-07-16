@@ -28,59 +28,25 @@ class DBHelper {
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    // get restaurants from indexedDB
-    // dbPromise.then(function (db) {
-    //   let tx = db.transaction('restaurants');
-    //   let restaurantStore = tx.objectStore('restaurants');
-    //   return restaurantStore.getAll();
-    // })
-    //   .then(function (restaurants) {
-    //     if (restaurants.length !== 0) {
-    //       callback(null, restaurants);
-    //     } else {
-      
-          // fetch from network
-          fetch(DBHelper.DATABASE_URL)
-            .then(function (res) {
-              return res.json();
-            })
-            .then(function (restaurants) {
-              // add to indexedDB
-              dbPromise.then(function (db) {
-                let tx = db.transaction('restaurants', 'readwrite');
-                let restaurantStore = tx.objectStore('restaurants');
-                restaurants.forEach(function (restaurant) {
-                  restaurantStore.put(restaurant);
-                })
-                callback(null, restaurants);
-              })
-            })
-            .catch(function (error) {
-              callback(null, error);
-            })
-        }
-  //     })
-  // }
-
-  static updateIndexDB()  {
+    // fetch from network
     fetch(DBHelper.DATABASE_URL)
-            .then(function (res) {
-              return res.json();
-            })
-            .then(function (restaurants) {
-              // add to indexedDB
-              dbPromise.then(function (db) {
-                let tx = db.transaction('restaurants', 'readwrite');
-                let restaurantStore = tx.objectStore('restaurants');
-                restaurants.forEach(function (restaurant) {
-                  restaurantStore.put(restaurant);
-                })
-            //     callback(null, restaurants);
-            //   })
-            })
-            // .catch(function (error) {
-            //   callback(null, error);
-            })
+      .then(function (res) {
+        return res.json();
+      })
+      .then(function (restaurants) {
+        // add to indexedDB
+        dbPromise.then(function (db) {
+          let tx = db.transaction('restaurants', 'readwrite');
+          let restaurantStore = tx.objectStore('restaurants');
+          restaurants.forEach(function (restaurant) {
+            restaurantStore.put(restaurant);
+          })
+          callback(null, restaurants);
+        })
+      })
+      .catch(function (error) {
+        callback(null, error);
+      })
   }
 
   /**
